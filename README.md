@@ -103,21 +103,23 @@ All contributions are welcome: bug fixes, data contributions, recommendations.
 
 ## Endpoints
 
-> Schools -> https://harry-potter-open-api.herokuapp.com/api/v1/schools
+Path> `harry-potter-open-api-ff4c7a51ed23.herokuapp.com/`
 
-> School houses -> https://harry-potter-open-api.herokuapp.com/api/v1/school_houses
+> Schools -> api/v1/schools
 
-> School house -> https://harry-potter-open-api.herokuapp.com/api/v1/school_houses/1
+> School houses -> api/v1/school_houses
 
-> Characters -> https://harry-potter-open-api.herokuapp.com/api/v1/people
+> School house -> api/v1/school_houses/1
 
-> Character -> https://harry-potter-open-api.herokuapp.com/api/v1/people/1
+> Characters -> api/v1/people
 
-> Students -> https://harry-potter-open-api.herokuapp.com/api/v1/people/students
+> Character -> api/v1/people/1
 
-> Creatures -> https://harry-potter-open-api.herokuapp.com/api/v1/creatures
+> Students -> api/v1/people/students
 
-> Creature -> https://harry-potter-open-api.herokuapp.com/api/v1/creatures/1
+> Creatures -> api/v1/creatures
+
+> Creature -> api/v1/creatures/1
 
 
 <br>
