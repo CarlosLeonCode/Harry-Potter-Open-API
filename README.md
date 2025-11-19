@@ -1,6 +1,6 @@
 <div align="center">
-
-<img src="https://i.ibb.co/drygyTX/harry-potter-open-api-logo.png" alt="image" border="0" width="450">
+  
+<img width="1024" height="1024" alt="hp" src="https://github.com/user-attachments/assets/adf96291-0086-491c-8741-06832029344d" />
 
 <br /> 
 
