@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :hp_data do
 
   FILE_PATH = "#{Rails.root}/public/data/data.xlsx"
@@ -92,12 +94,23 @@ namespace :hp_data do
     first_row_keys = worksheet[0]
 
     cols_rows[:rows].times do |ind| 
+      next if ind == 0
+
+      row = worksheet[ind]
+      next if row.nil?
+
+      is_empty_row = row.cells.all? do |cell| 
+        cell.nil? || cell.value.to_s.strip.empty?
+      end
+
+      next if is_empty_row
+
       data.push row_skeleton(
         cols:       cols_rows[:cols], 
-        worksheet:  worksheet[ind], 
+        worksheet:  row, 
         keys:       first_row_keys,
         foreigns:   foreigns
-      ) if ind > 0 
+      )
     end 
     data
   end
