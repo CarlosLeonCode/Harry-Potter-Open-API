@@ -1,0 +1,62 @@
+name: Production Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test-and-release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+    
+    services:
+      # If your Rails app needs a DB for tests, we spin it up here
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1.2'
+          bundler-cache: true
+
+      # 3. Setup Database (Schema load)
+      - name: Setup Database
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/hp_api_test
+        run: |
+          bin/rails db:prepar
+      # 4. Run Tests (Crucial: Don't release broken code)
+      # - name: Run Tests
+      #   env:
+      #     RAILS_ENV: test
+      #     DATABASE_URL: postgres://postgres:password@localhost:5432/myapp_test
+      #   run: |
+      #     bin/rails test # or 'bundle exec rspec' if you use RSpec
+
+      # 5. Create the GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        # if: success() # Only run if tests passed
+        with:
+          generate_release_notes: true # Auto-generates changelog from PRs
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
