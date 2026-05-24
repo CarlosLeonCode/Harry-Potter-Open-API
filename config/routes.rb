@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/docs', to: redirect('/docs/index.html')
+
   root to: redirect('https://harrypotter-open-api.netlify.app/')
 
   # -- Start api v1 routes

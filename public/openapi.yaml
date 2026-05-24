@@ -1,0 +1,581 @@
+openapi: 3.1.0
+info:
+  title: Harry Potter Open API
+  version: 1.0.0
+  description: |
+    Read-only API reference for the Wizarding World data exposed by this Rails app.
+
+    The interactive Scalar UI is served at `/docs` and this OpenAPI document is served at
+    `/openapi.yaml`.
+
+    Student routes are intentionally omitted from this first spec pass because the current
+    routing/controller setup marks the nested variant as broken and does not expose a matching
+    `StudentsController` implementation under `app/controllers/api/v1`.
+servers:
+  - url: /
+    description: Same-origin server
+tags:
+  - name: Health
+  - name: Genres
+  - name: Schools
+  - name: School Houses
+  - name: People
+  - name: Creatures
+paths:
+  /api/v1/health:
+    get:
+      tags:
+        - Health
+      summary: Health status
+      operationId: getHealth
+      responses:
+        '200':
+          description: API is reachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: ok
+
+  /api/v1/genres:
+    get:
+      tags:
+        - Genres
+      summary: List genres
+      operationId: listGenres
+      responses:
+        '200':
+          description: Genres collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreCollectionResponse'
+
+  /api/v1/genres/{id}:
+    get:
+      tags:
+        - Genres
+      summary: Get a genre
+      operationId: getGenre
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Genre resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/schools:
+    get:
+      tags:
+        - Schools
+      summary: List schools
+      operationId: listSchools
+      responses:
+        '200':
+          description: Schools collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolCollectionResponse'
+
+  /api/v1/schools/{id}:
+    get:
+      tags:
+        - Schools
+      summary: Get a school
+      operationId: getSchool
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: School resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/schools/{id}/houses:
+    get:
+      tags:
+        - Schools
+        - School Houses
+      summary: List houses for a school
+      operationId: listSchoolHousesForSchool
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: School houses collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolHouseCollectionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/school_houses:
+    get:
+      tags:
+        - School Houses
+      summary: List school houses
+      operationId: listSchoolHouses
+      responses:
+        '200':
+          description: School houses collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolHouseCollectionResponse'
+
+  /api/v1/school_houses/{id}:
+    get:
+      tags:
+        - School Houses
+      summary: Get a school house
+      operationId: getSchoolHouse
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: School house resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolHouseResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/people:
+    get:
+      tags:
+        - People
+      summary: List people
+      operationId: listPeople
+      responses:
+        '200':
+          description: People collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonCollectionResponse'
+
+  /api/v1/people/{id}:
+    get:
+      tags:
+        - People
+      summary: Get a person
+      operationId: getPerson
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Person resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/creatures:
+    get:
+      tags:
+        - Creatures
+      summary: List creatures
+      operationId: listCreatures
+      responses:
+        '200':
+          description: Creatures collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatureCollectionResponse'
+
+  /api/v1/creatures/{id}:
+    get:
+      tags:
+        - Creatures
+      summary: Get a creature
+      operationId: getCreature
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Creature resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatureResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Record identifier
+      schema:
+        type: integer
+
+  responses:
+    NotFound:
+      description: Resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: not_found
+            message: Record not found 😵‍💫
+
+  schemas:
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          example: ok
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          example: not_found
+        message:
+          type: string
+          example: Record not found 😵‍💫
+      required:
+        - status
+        - message
+
+    GenreAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: Male
+      required:
+        - name
+
+    GenreResource:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: genre
+        attributes:
+          $ref: '#/components/schemas/GenreAttributes'
+      required:
+        - id
+        - type
+        - attributes
+
+    GenreResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/GenreResource'
+      required:
+        - data
+
+    GenreCollectionResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenreResource'
+      required:
+        - data
+
+    SchoolAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: Hogwarts School of Witchcraft and Wizardry
+        url_logo:
+          type: string
+          example: https://i.ibb.co/60HvbSm/hogwarts.jpg
+      required:
+        - name
+        - url_logo
+
+    SchoolResource:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: school
+        attributes:
+          $ref: '#/components/schemas/SchoolAttributes'
+      required:
+        - id
+        - type
+        - attributes
+
+    SchoolResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/SchoolResource'
+      required:
+        - data
+
+    SchoolCollectionResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SchoolResource'
+      required:
+        - data
+
+    SchoolHouseAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: Gryffindor
+        url_logo:
+          type: string
+          example: https://i.ibb.co/8MJY087/Gryffindor.jpg
+      required:
+        - name
+        - url_logo
+
+    SchoolHouseResource:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: school_house
+        attributes:
+          $ref: '#/components/schemas/SchoolHouseAttributes'
+      required:
+        - id
+        - type
+        - attributes
+
+    SchoolHouseResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/SchoolHouseResource'
+      required:
+        - data
+
+    SchoolHouseCollectionResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SchoolHouseResource'
+      required:
+        - data
+
+    PersonAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: Harry
+        lastname:
+          type: string
+          example: Potter
+        real_photo:
+          type:
+            - string
+            - 'null'
+          example: https://i.ibb.co/C9LrC1j/harry-real.jpg
+        cartoon_photo:
+          type:
+            - string
+            - 'null'
+          example: https://i.ibb.co/cTv2VKK/harry-cartoon.jpg
+        ocupation:
+          type:
+            - string
+            - 'null'
+          example: Student
+        wand:
+          type:
+            - string
+            - 'null'
+          example: Holly, phoenix feather, 11"
+        patronus:
+          type:
+            - string
+            - 'null'
+          example: Stag
+        school_house:
+          type:
+            - string
+            - 'null'
+          example: Gryffindor
+        genre:
+          type:
+            - string
+            - 'null'
+          example: Male
+      required:
+        - name
+        - lastname
+        - real_photo
+        - cartoon_photo
+        - ocupation
+        - wand
+        - patronus
+        - school_house
+        - genre
+
+    PersonResource:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: person
+        attributes:
+          $ref: '#/components/schemas/PersonAttributes'
+      required:
+        - id
+        - type
+        - attributes
+
+    PersonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/PersonResource'
+      required:
+        - data
+
+    PersonCollectionResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonResource'
+      required:
+        - data
+
+    CreatureAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: Hippogriff
+        related_to:
+          type:
+            - string
+            - 'null'
+          example: Beast
+        skin_color:
+          type:
+            - string
+            - 'null'
+          example: Grey
+        eye_color:
+          type:
+            - string
+            - 'null'
+          example: Orange
+        mortality:
+          type:
+            - string
+            - 'null'
+          example: Mortal
+        img:
+          type: string
+          example: https://example.com/hippogriff.png
+      required:
+        - name
+        - related_to
+        - skin_color
+        - eye_color
+        - mortality
+        - img
+
+    CreatureResource:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          type: string
+          example: creature
+        attributes:
+          $ref: '#/components/schemas/CreatureAttributes'
+      required:
+        - id
+        - type
+        - attributes
+
+    CreatureResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/CreatureResource'
+      required:
+        - data
+
+    CreatureCollectionResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreatureResource'
+      required:
+        - data

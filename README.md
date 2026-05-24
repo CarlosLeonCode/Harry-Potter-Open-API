@@ -19,7 +19,7 @@
 **A RESTful OPEN API for the Wizarding World.**  
 Access data about characters, creatures, schools, and houses through a simple JSON interface.
 
-[View Documentation](#-documentation) • [Report Bug](https://github.com/CarlosLeonCode/harry_potter_open_api/issues) • [Request Feature](https://github.com/CarlosLeonCode/harry_potter_open_api/issues)
+[View Documentation](https://harry-potter-open-api-ff4c7a51ed23.herokuapp.com/docs) • [Report Bug](https://github.com/CarlosLeonCode/harry_potter_open_api/issues) • [Request Feature](https://github.com/CarlosLeonCode/harry_potter_open_api/issues)
 
 </div>
 
@@ -32,18 +32,12 @@ Access data about characters, creatures, schools, and houses through a simple JS
 https://harry-potter-open-api-ff4c7a51ed23.herokuapp.com
 ```
 
-### Endpoints
+### Interactive Reference
 
-| Resource | Method | Endpoint | Description |
-| :--- | :---: | :--- | :--- |
-| **Schools** | `GET` | `/api/v1/schools` | List all wizarding schools |
-| **Houses** | `GET` | `/api/v1/school_houses` | List all school houses |
-| **House Details** | `GET` | `/api/v1/school_houses/:id` | Get a specific house by ID |
-| **Characters** | `GET` | `/api/v1/people` | List all characters |
-| **Character Details** | `GET` | `/api/v1/people/:id` | Get a specific character by ID |
-| **Students** | `GET` | `/api/v1/people/students` | List only students |
-| **Creatures** | `GET` | `/api/v1/creatures` | List all magical creatures |
-| **Creature Details** | `GET` | `/api/v1/creatures/:id` | Get a specific creature by ID |
+- Browse the API in Scalar at [`/docs`](https://harry-potter-open-api-ff4c7a51ed23.herokuapp.com/docs).
+- The OpenAPI source served by the app is available at [`/openapi.yaml`](https://harry-potter-open-api-ff4c7a51ed23.herokuapp.com/openapi.yaml).
+- The checked-in OpenAPI file is now the documentation source of truth, alongside `config/routes.rb`.
+- Student routes are intentionally excluded from the current docs because the nested route is marked broken in `config/routes.rb` and there is no matching `StudentsController` implementation in `app/controllers/api/v1`.
 
 <br />
 
@@ -105,6 +99,8 @@ bundle exec rake hp_data:build
 rails s
 ```
 Access the API at `http://localhost:3000/api/v1/...`
+
+Docs are available locally at `http://localhost:3000/docs`.
 
 </details>
 
